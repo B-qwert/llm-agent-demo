@@ -1,0 +1,6 @@
+*
+!requirements.txt
+!bizcodeqa/**
+!scripts/**
+!tests/**
+!Dockerfile

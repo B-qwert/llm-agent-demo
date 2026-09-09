@@ -1,0 +1,28 @@
+name: development-environment
+on: [push, pull_request]
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s tests -v
+      - run: python scripts/init_env.py
+      - run: docker compose config --quiet
+  databases:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python scripts/init_env.py
+      - run: docker compose up -d --wait --wait-timeout 360
+      - run: docker compose --profile tools build check
+      - run: docker compose --profile tools run --rm check --only databases --report reports/databases.json
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-connectivity
+          path: reports/*.json
+      - if: always()
+        run: docker compose down
