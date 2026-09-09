@@ -10,10 +10,10 @@
 
 主分支为 `main`，仅保留可复现版本。日常从最新 main 创建短期分支，如 `feat/neo4j-smoke`、`fix/llm-timeout`、`docs/dev-setup`。每个分支围绕一个问题，完成后发 Pull Request，至少一位非作者批准且 CI 通过，使用 squash 合并。禁止直接向 main 推送、禁止对共享分支 force push。
 
-远程仓库地址尚待提供。由负责人在 GitHub 或 Gitee 建立私有仓库，添加其余两名成员，再配置 remote 并首次推送。后续是否开源及采用何种许可证由团队确认；课题介绍中的预期成果不等于现在授权公开资料。
+远程仓库已确定为 `https://github.com/B-qwert/llm-agent-demo.git`。由负责人在 GitHub 添加其余两名成员，并配置分支保护。仓库公开性由团队在平台确认。后续是否开源及采用何种许可证由团队确认；课题介绍中的预期成果不等于现在授权公开资料。
 
 ```powershell
-git remote add origin <实际远程仓库地址>
+git remote -v
 git config user.name "本人姓名"
 git config user.email "本人邮箱"
 git push -u origin main

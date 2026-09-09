@@ -27,10 +27,15 @@ def chat(messages):
     tokens = int(os.getenv('LLM_MAX_TOKENS', '128'))
     if not 0 < timeout <= 300 or not 1 <= tokens <= 4096:
         raise ValueError('Invalid LLM timeout or token limit')
+    payload = {'model': model, 'messages': messages, 'max_tokens': tokens, 'stream': False}
+    thinking = os.getenv('LLM_THINKING', '').strip()
+    if thinking:
+        if thinking not in ('enabled', 'disabled'):
+            raise ValueError('Invalid LLM thinking mode')
+        payload['thinking'] = {'type': thinking}
     request = urllib.request.Request(
         base + '/chat/completions',
-        data=json.dumps({'model': model, 'messages': messages, 'max_tokens': tokens,
-                         'stream': False}).encode('utf-8'),
+        data=json.dumps(payload).encode('utf-8'),
         headers={'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json'},
         method='POST',
     )
@@ -38,6 +43,7 @@ def chat(messages):
         with urllib.request.build_opener(NoRedirect()).open(request, timeout=timeout) as response:
             data = json.load(response)
     except urllib.error.HTTPError as exc:
+        exc.close()
         hints = {401: 'check API key', 403: 'check model permission', 404: 'check URL/model',
                  429: 'rate limit or quota', 400: 'check model request parameters'}
         raise RuntimeError(f'LLM HTTP {exc.code}: {hints.get(exc.code, "provider request failed")}') from None

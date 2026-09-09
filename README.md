@@ -19,9 +19,9 @@ powershell -File scripts/dev.ps1 up
 
 ## LLM 接入
 
-编辑 `.env`，填写 `LLM_BASE_URL`、`LLM_MODEL`、`LLM_API_KEY`。基础地址不要带 `/chat/completions` 后缀。本实现支持 OpenAI 兼容的 Chat Completions 协议；原生 Claude Messages 协议需要另写适配器。
+已按用户选型配置 DeepSeek：`LLM_BASE_URL=https://api.deepseek.com`、`LLM_MODEL=deepseek-v4-flash`。编辑 `.env` 填写 `LLM_API_KEY`。基础地址不要带 `/chat/completions` 后缀。本实现支持 OpenAI 兼容的 Chat Completions 协议；原生 Claude Messages 协议需要另写适配器。
 
-例如 DeepSeek 的基础地址为 `https://api.deepseek.com`，模型名以账号可用模型为准，不预设已经获得权限。测试默认限制 128 输出 token，发送固定的短文本，不上传课题资料或业务源码。调用会消耗服务商额度。
+模型名已对照 [DeepSeek 官方文档](https://api-docs.deepseek.com/) 核实，但账号权限仍需真实调用验证。短连通性测试配置 `LLM_THINKING=disabled`，避免默认思考模式耗尽 128 token 的测试预算；其他兼容服务不支持此参数时将该项留空。业务推理阶段可按需求重新配置模式和预算。测试默认限制 128 输出 token，发送固定的短文本，不上传课题资料或业务源码。调用会消耗服务商额度。
 
 ```powershell
 powershell -File scripts/dev.ps1 llm
@@ -63,3 +63,5 @@ python -m unittest discover -s tests -v
 镜像版本参考 [Neo4j 5 发布说明](https://community.neo4j.com/t/neo4j-5-release/66912) 与 [Milvus 官方 Compose 配置](https://github.com/milvus-io/milvus/blob/v2.6.22/deployments/docker/standalone/docker-compose.yml)。后者在 v2.6.22 源码标签中仍引用 Milvus v2.6.21，本工程沿用配置内的版本与配套 etcd/MinIO，而未将标签号当作镜像版本。版本固定用于开发复现，正式部署前需重新评估维护与升级。
 
 操作依据：[Docker Desktop Windows 安装](https://docs.docker.com/desktop/setup/install/windows-install/)、[Neo4j Docker 部署](https://neo4j.com/docs/operations-manual/current/docker/introduction/)、[DeepSeek API](https://api-docs.deepseek.com/)。
+
+远程仓库：[B-qwert/llm-agent-demo](https://github.com/B-qwert/llm-agent-demo)。

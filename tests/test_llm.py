@@ -29,6 +29,20 @@ class LLMTests(unittest.TestCase):
             self.assertEqual(json.loads(request.data)['model'], 'test-model')
             self.assertEqual(result['content'], 'OK')
 
+    def test_deepseek_thinking_disabled(self):
+        os.environ['LLM_THINKING'] = 'disabled'
+        with patch('urllib.request.OpenerDirector.open') as opened:
+            opened.return_value.__enter__.return_value = io.StringIO(
+                '{"choices": [{"message": {"content": "OK"}}]}')
+            chat([])
+            self.assertEqual(json.loads(opened.call_args.args[0].data)['thinking'],
+                             {'type': 'disabled'})
+
+    def test_invalid_thinking_fails_before_network(self):
+        os.environ['LLM_THINKING'] = 'invalid'
+        with self.assertRaisesRegex(ValueError, 'thinking mode'):
+            chat([])
+
     def test_http_errors_are_redacted(self):
         for code in (400, 401, 403, 404, 429, 500):
             with self.subTest(code=code), patch('urllib.request.OpenerDirector.open',
