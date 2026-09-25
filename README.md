@@ -60,7 +60,7 @@ python -m unittest discover -s tests -v
 - [协作规范](CONTRIBUTING.md)：分支、提交、评审、三人职责。
 - [开发环境成果与验收报告](docs/开发环境成果与验收报告.md)：环境成果与连通性验收记录。
 
-镜像版本参考 [Neo4j 5 发布说明](https://community.neo4j.com/t/neo4j-5-release/66912) 与 [Milvus 官方 Compose 配置](https://github.com/milvus-io/milvus/blob/v2.6.22/deployments/docker/standalone/docker-compose.yml)。后者在 v2.6.22 源码标签中仍引用 Milvus v2.6.21，本工程沿用配置内的版本与配套 etcd/MinIO，而未将标签号当作镜像版本。版本固定用于开发复现，正式部署前需重新评估维护与升级。
+镜像版本参考 [Neo4j 5 发布说明](https://community.neo4j.com/t/neo4j-5-release/66912) 与 [Milvus 官方 Compose 配置](https://github.com/milvus-io/milvus/blob/v2.6.22/deployments/docker/standalone/docker-compose.yml)。后者在 v2.6.22 源码标签中仍引用 Milvus v2.6.21，本工程沿用 Milvus 与 etcd 版本；原 MinIO 镜像仓库现已无法公开拉取，因此改用 Coolify 从 MinIO 源码构建的固定版本镜像，而未将 Milvus 源码标签号当作镜像版本。版本固定用于开发复现，正式部署前需重新评估维护与升级。
 
 操作依据：[Docker Desktop Windows 安装](https://docs.docker.com/desktop/setup/install/windows-install/)、[Neo4j Docker 部署](https://neo4j.com/docs/operations-manual/current/docker/introduction/)、[DeepSeek API](https://api-docs.deepseek.com/)。
 
