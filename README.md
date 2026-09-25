@@ -1,6 +1,6 @@
 # 业务逻辑智能问询系统开发环境
 
-本工程对应课题的四项底座任务：Git 协作规范、Neo4j 部署、Milvus 部署、LLM API 接入与连通性测试。部署目标为 Windows 上的 Docker Desktop 与 WSL 2，数据库使用 Linux 容器。当前验收状态见 [开发环境交付与验收](docs/开发环境交付与验收.md)。
+本工程对应课题的四项底座任务：Git 协作规范、Neo4j 部署、Milvus 部署、LLM API 接入与连通性测试。部署目标为 Windows 上的 Docker Desktop 与 WSL 2，数据库使用 Linux 容器。当前验收状态见 [开发环境成果与验收报告](docs/开发环境成果与验收报告.md)。
 
 ## 快速开始
 
@@ -58,7 +58,7 @@ python -m unittest discover -s tests -v
 - `bizcodeqa/check.py`：真实连通性验收，带失败退出码与 JSON 报告。
 - `scripts/`：本地配置生成与 PowerShell 一键操作。
 - [协作规范](CONTRIBUTING.md)：分支、提交、评审、三人职责。
-- [开发环境交付与验收](docs/开发环境交付与验收.md)：依据、验收标准、剩余事项。
+- [开发环境成果与验收报告](docs/开发环境成果与验收报告.md)：环境成果与连通性验收记录。
 
 镜像版本参考 [Neo4j 5 发布说明](https://community.neo4j.com/t/neo4j-5-release/66912) 与 [Milvus 官方 Compose 配置](https://github.com/milvus-io/milvus/blob/v2.6.22/deployments/docker/standalone/docker-compose.yml)。后者在 v2.6.22 源码标签中仍引用 Milvus v2.6.21，本工程沿用配置内的版本与配套 etcd/MinIO，而未将标签号当作镜像版本。版本固定用于开发复现，正式部署前需重新评估维护与升级。
 
