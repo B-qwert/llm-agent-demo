@@ -1,6 +1,13 @@
-# 业务逻辑智能问询系统开发环境
+# 基于代码知识图谱与大模型的业务逻辑智能问询系统
 
-本工程对应课题的四项底座任务：Git 协作规范、Neo4j 部署、Milvus 部署、LLM API 接入与连通性测试。部署目标为 Windows 上的 Docker Desktop 与 WSL 2，数据库使用 Linux 容器。当前验收状态见 [开发环境成果与验收报告](docs/开发环境成果与验收报告.md)。
+本仓库用于课题的开发与三人协作。目前已完成开发环境搭建、文献调研与技术选型；现有 Python 代码提供数据库连通性检查和 DeepSeek API 客户端，代码解析、知识图谱构建、混合检索与业务问答功能仍待开发。
+
+| 当前成果 | 仓库内容 |
+| --- | --- |
+| 开发环境 | Git 协作规范、Neo4j 与 Milvus 容器、DeepSeek API 接入及连通性检查；验收记录见[开发环境成果与验收报告](docs/开发环境成果与验收报告.md)。 |
+| 研究准备 | [文献调研与综述笔记](docs/文献调研与综述笔记.md)、[技术选型调研报告](docs/技术选型调研报告.md)。 |
+
+开发环境面向 Windows、Docker Desktop、WSL 2 和 Linux 容器。以下步骤只用于启动现有底座和验证连接，不会启动尚未实现的业务问答系统。
 
 ## 快速开始
 
@@ -57,8 +64,10 @@ python -m unittest discover -s tests -v
 - `bizcodeqa/llm.py`：可被后续业务模块复用的 LLM 客户端。
 - `bizcodeqa/check.py`：真实连通性验收，带失败退出码与 JSON 报告。
 - `scripts/`：本地配置生成与 PowerShell 一键操作。
-- [协作规范](CONTRIBUTING.md)：分支、提交、评审、三人职责。
+- [协作规范](CONTRIBUTING.md)与[团队协作规范](docs/团队协作规范.md)：分支、提交、评审及全周期协作约定。
 - [开发环境成果与验收报告](docs/开发环境成果与验收报告.md)：环境成果与连通性验收记录。
+- [文献调研与综述笔记](docs/文献调研与综述笔记.md)：课题相关研究、研究问题与后续验证方向。
+- [技术选型调研报告](docs/技术选型调研报告.md)：图数据库、向量数据库和 LLM API 的选型依据。
 
 镜像版本参考 [Neo4j 5 发布说明](https://community.neo4j.com/t/neo4j-5-release/66912) 与 [Milvus 官方 Compose 配置](https://github.com/milvus-io/milvus/blob/v2.6.22/deployments/docker/standalone/docker-compose.yml)。后者在 v2.6.22 源码标签中仍引用 Milvus v2.6.21，本工程沿用 Milvus 与 etcd 版本；原 MinIO 镜像仓库现已无法公开拉取，因此改用 Coolify 从 MinIO 源码构建的固定版本镜像，而未将 Milvus 源码标签号当作镜像版本。版本固定用于开发复现，正式部署前需重新评估维护与升级。
 
