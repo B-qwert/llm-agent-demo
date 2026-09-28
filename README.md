@@ -68,6 +68,7 @@ python -m unittest discover -s tests -v
 - [开发环境成果与验收报告](docs/开发环境成果与验收报告.md)：环境成果与连通性验收记录。
 - [文献调研与综述笔记](docs/文献调研与综述笔记.md)：课题相关研究、研究问题与后续验证方向。
 - [技术选型调研报告](docs/技术选型调研报告.md)：图数据库、向量数据库和 LLM API 的选型依据。
+- [开题报告](docs/开题报告.md)：研究目标、技术路线、实验设计与进度安排。
 
 镜像版本参考 [Neo4j 5 发布说明](https://community.neo4j.com/t/neo4j-5-release/66912) 与 [Milvus 官方 Compose 配置](https://github.com/milvus-io/milvus/blob/v2.6.22/deployments/docker/standalone/docker-compose.yml)。后者在 v2.6.22 源码标签中仍引用 Milvus v2.6.21，本工程沿用 Milvus 与 etcd 版本；原 MinIO 镜像仓库现已无法公开拉取，因此改用 Coolify 从 MinIO 源码构建的固定版本镜像，而未将 Milvus 源码标签号当作镜像版本。版本固定用于开发复现，正式部署前需重新评估维护与升级。
 
