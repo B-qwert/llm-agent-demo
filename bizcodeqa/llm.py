@@ -55,5 +55,4 @@ def chat(messages):
             raise ValueError
     except (KeyError, IndexError, TypeError, ValueError):
         raise RuntimeError('LLM returned no non-empty text completion') from None
-    return {'content': content, 'model': data.get('model', model), 'usage': data.get('usage', {}),
-            'finish_reason': data['choices'][0].get('finish_reason')}
+    return {'content': content, 'model': data.get('model', model), 'usage': data.get('usage', {})}
