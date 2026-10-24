@@ -1,0 +1,350 @@
+{
+  "dataset_version": "1.0.0",
+  "source_commit_sha": "df2b56851beb70533c6f9eab441917f2379c4de6",
+  "review_status": "agent_prepared_pending_team_review",
+  "questions": [
+    {
+      "question_id": "Q01",
+      "reference_answer": "图书存在且可借，借阅人存在且没有未归还图书",
+      "required_points": [
+        "图书存在",
+        "图书未借出",
+        "借阅人已登记",
+        "借阅人无未归还图书"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 211,
+          "end_line": 255
+        }
+      ]
+    },
+    {
+      "question_id": "Q02",
+      "reference_answer": "readerState 为 0 时拒绝再次借阅",
+      "required_points": [
+        "有未还图书时拒绝再次借阅"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 211,
+          "end_line": 255
+        }
+      ]
+    },
+    {
+      "question_id": "Q03",
+      "reference_answer": "bookState、bookDate、bookCount、borrowName、readerState",
+      "required_points": [
+        "图书状态为借出",
+        "保存借出日期",
+        "借出次数加一",
+        "保存借阅人的书名",
+        "借阅人状态为未还"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 211,
+          "end_line": 255
+        }
+      ]
+    },
+    {
+      "question_id": "Q04",
+      "reference_answer": "bookState 为 0 时拒绝删除",
+      "required_points": [
+        "已借出图书不可删除"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 179,
+          "end_line": 209
+        }
+      ]
+    },
+    {
+      "question_id": "Q05",
+      "reference_answer": "readerState 为 0 时拒绝删除",
+      "required_points": [
+        "有未还图书的借阅人不可删除"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 351,
+          "end_line": 382
+        }
+      ]
+    },
+    {
+      "question_id": "Q06",
+      "reference_answer": "收集非空图书，按借出次数降序排列，书名同步交换",
+      "required_points": [
+        "按借出次数降序",
+        "书名和次数同步交换"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 97,
+          "end_line": 127
+        }
+      ]
+    },
+    {
+      "question_id": "Q07",
+      "reference_answer": "容量未满，名称 trim 后非空，书名不重复",
+      "required_points": [
+        "检查容量",
+        "trim 后名称非空",
+        "书名不重复"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 129,
+          "end_line": 159
+        }
+      ]
+    },
+    {
+      "question_id": "Q08",
+      "reference_answer": "检查容量与 ID 重复，但未检查姓名和 ID 非空",
+      "required_points": [
+        "未校验姓名非空",
+        "未校验 ID 非空",
+        "校验容量和 ID 重复"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 305,
+          "end_line": 333
+        }
+      ]
+    },
+    {
+      "question_id": "Q09",
+      "reference_answer": "取借出和归还日期的日字段相减，负数加 30，再乘 0.5；不能正确处理一般跨月跨年日期",
+      "required_points": [
+        "只取日期的日字段相减",
+        "负数加30",
+        "天数乘0.5",
+        "不能一般性正确处理跨月跨年"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 257,
+          "end_line": 303
+        }
+      ]
+    },
+    {
+      "question_id": "Q10",
+      "reference_answer": "按书名查找已借图书和未还借阅记录，没有输入或核验归还者 ID",
+      "required_points": [
+        "按书名及未还状态匹配",
+        "没有输入或核验归还者ID"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 257,
+          "end_line": 303
+        }
+      ]
+    },
+    {
+      "question_id": "Q11",
+      "reference_answer": "仅使用内存数组，启动时执行 initData；没有持久化逻辑",
+      "required_points": [
+        "新增数据不保留",
+        "内存数组",
+        "启动重新初始化"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 1,
+          "end_line": 383
+        }
+      ]
+    },
+    {
+      "question_id": "Q12",
+      "reference_answer": "startSystem 的选项 4 调用 borrowBook，选项 5 调用 returnBook",
+      "required_points": [
+        "选项4进入借书",
+        "选项5进入还书",
+        "由startSystem直接调用"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 42,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "question_id": "Q13",
+      "reference_answer": "bookState 为 1、bookDate 为空字符串、bookCount 为 0",
+      "required_points": [
+        "状态1",
+        "日期空字符串",
+        "次数0"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 129,
+          "end_line": 159
+        }
+      ]
+    },
+    {
+      "question_id": "Q14",
+      "reference_answer": "从删除位置同步前移四个图书数组，再清理末尾槽位",
+      "required_points": [
+        "同步前移bookName/bookState/bookDate/bookCount",
+        "清理末尾槽位"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 179,
+          "end_line": 209
+        }
+      ]
+    },
+    {
+      "question_id": "Q15",
+      "reference_answer": "该文件未提供这些功能的实现证据，应说明无法从当前源码确定，不能编造规则",
+      "required_points": [
+        "说明无法从现有信息确定规则",
+        "不编造权限或提醒实现"
+      ],
+      "category": "insufficient_evidence",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 1,
+          "end_line": 383
+        }
+      ]
+    },
+    {
+      "question_id": "Q16",
+      "reference_answer": "借书时只 trim 并直接保存，没有日期格式和合法性校验；归还时拆分字符串并解析日字段，异常时提示日期格式错误，也不构成完整日期校验。",
+      "required_points": [
+        "借书时不校验日期",
+        "归还时才拆分和解析日字段",
+        "解析异常提示格式错误"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 211,
+          "end_line": 255
+        },
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 257,
+          "end_line": 303
+        }
+      ]
+    },
+    {
+      "question_id": "Q17",
+      "reference_answer": "bookState 为 1 时显示“无”，不是直接输出保存的空字符串。",
+      "required_points": [
+        "可借时日期显示“无”"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 161,
+          "end_line": 177
+        }
+      ]
+    },
+    {
+      "question_id": "Q18",
+      "reference_answer": "容量 50，扫描 bookName 找第一个 null 槽位，没有空位时拒绝添加。",
+      "required_points": [
+        "上限50",
+        "找第一个null槽位",
+        "无空位拒绝"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 8,
+          "end_line": 8
+        },
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 129,
+          "end_line": 159
+        }
+      ]
+    },
+    {
+      "question_id": "Q19",
+      "reference_answer": "bookState 设为 1，bookDate 设为空字符串，borrowName 设为“无”，readerState 设为 1；不递减借出次数。",
+      "required_points": [
+        "bookState=1",
+        "bookDate为空",
+        "borrowName为“无”",
+        "readerState=1",
+        "bookCount不递减"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 257,
+          "end_line": 303
+        }
+      ]
+    },
+    {
+      "question_id": "Q20",
+      "reference_answer": "不会。先复制书名与次数到两个 List，在列表内排序，原 bookName/bookCount 数组未重排。",
+      "required_points": [
+        "复制到List排序",
+        "原始图书数组不重排"
+      ],
+      "category": "project_behavior",
+      "evidence": [
+        {
+          "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+          "start_line": 97,
+          "end_line": 127
+        }
+      ]
+    }
+  ]
+}

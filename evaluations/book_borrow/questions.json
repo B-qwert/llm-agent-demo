@@ -1,0 +1,106 @@
+{
+  "dataset_version": "1.0.0",
+  "source_commit_sha": "df2b56851beb70533c6f9eab441917f2379c4de6",
+  "questions": [
+    {
+      "question_id": "Q01",
+      "question": "借书前检查哪些条件？",
+      "split": "dev"
+    },
+    {
+      "question_id": "Q02",
+      "question": "一个人有未还图书时能否再借？",
+      "split": "dev"
+    },
+    {
+      "question_id": "Q03",
+      "question": "借书成功后更新哪些字段？",
+      "split": "dev"
+    },
+    {
+      "question_id": "Q04",
+      "question": "已借出的图书能否删除？",
+      "split": "dev"
+    },
+    {
+      "question_id": "Q05",
+      "question": "有未还图书的借阅人能否删除？",
+      "split": "dev"
+    },
+    {
+      "question_id": "Q06",
+      "question": "排行榜如何排序？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q07",
+      "question": "新增图书执行哪些校验？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q08",
+      "question": "新增借阅人是否校验姓名和 ID 非空？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q09",
+      "question": "租金如何计算，跨月是否准确？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q10",
+      "question": "还书是否核验借阅人 ID？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q11",
+      "question": "重启后新增数据会保留吗？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q12",
+      "question": "菜单如何进入借阅和归还逻辑？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q13",
+      "question": "新书入库后借阅状态与次数是什么？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q14",
+      "question": "删除图书时如何保持数组对应？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q15",
+      "question": "能否解释管理员权限或逾期提醒规则？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q16",
+      "question": "借出日期是在借书时校验格式，还是归还时才处理？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q17",
+      "question": "查看可借图书时，借出日期一栏显示什么？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q18",
+      "question": "新增图书的容量上限是多少，怎样判断已满？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q19",
+      "question": "归还成功后，图书和借阅人的哪些状态被复位？",
+      "split": "eval"
+    },
+    {
+      "question_id": "Q20",
+      "question": "排行榜排序会改变原始图书数组的顺序吗？",
+      "split": "eval"
+    }
+  ]
+}

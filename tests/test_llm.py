@@ -21,13 +21,14 @@ class LLMTests(unittest.TestCase):
     def test_request_and_completion(self):
         with patch('urllib.request.OpenerDirector.open') as opened:
             opened.return_value.__enter__.return_value = io.StringIO(json.dumps(
-                {'choices': [{'message': {'content': 'OK'}}], 'usage': {'total_tokens': 7}}))
+                {'choices': [{'message': {'content': 'OK'}, 'finish_reason': 'stop'}], 'usage': {'total_tokens': 7}}))
             result = chat([{'role': 'user', 'content': 'ping'}])
             request = opened.call_args.args[0]
             self.assertEqual(request.full_url, 'https://example.test/v1/chat/completions')
             self.assertEqual(request.get_header('Authorization'), 'Bearer test-secret')
             self.assertEqual(json.loads(request.data)['model'], 'test-model')
             self.assertEqual(result['content'], 'OK')
+            self.assertEqual(result['finish_reason'], 'stop')
 
     def test_deepseek_thinking_disabled(self):
         os.environ['LLM_THINKING'] = 'disabled'
