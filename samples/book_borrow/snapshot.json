@@ -1,0 +1,31 @@
+{
+  "manifest_version": "1.0.0",
+  "code_graph_schema_version": "0.1.0",
+  "recorded_on": "2026-10-24",
+  "repository_id": "50563430-64b6-45ad-85c8-74f9224c9ced",
+  "repository_url": "https://github.com/B-qwert/llm-agent-demo.git",
+  "commit_sha": "df2b56851beb70533c6f9eab441917f2379c4de6",
+  "snapshot_id": "50563430-64b6-45ad-85c8-74f9224c9ced@df2b56851beb70533c6f9eab441917f2379c4de6",
+  "source_files": [
+    {
+      "file_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+      "content_sha256": "e1cce442aeddf7653b78febc921b674ff2994c29f48e08c8b36778bfe0ea2425",
+      "line_count": 383,
+      "encoding": "UTF-8",
+      "line_endings": "LF",
+      "language": "java"
+    }
+  ],
+  "source_origin": "Member-provided Java practice file; submitted at member request",
+  "copy_changes": ["Initial reader name replaced with a demo value", "Initial reader ID replaced with DEMO-READER-001", "UTF-8 without BOM and LF line endings"],
+  "verification": {
+    "status": "PASS",
+    "java_version": "24.0.1",
+    "javac_version": "24.0.1",
+    "compile_release": "17",
+    "command": "python scripts/prototype/check_sample.py",
+    "checks": ["compile_release_17", "menu_exit", "initial_books"],
+    "scope": "Compilation and two startup smoke scenarios; no full business, database, embedding or LLM evaluation",
+    "evidence_path": "samples/book_borrow/verification.json"
+  }
+}

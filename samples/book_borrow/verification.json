@@ -1,0 +1,17 @@
+{
+  "recorded_on": "2026-10-24",
+  "commit_sha": "df2b56851beb70533c6f9eab441917f2379c4de6",
+  "source_path": "samples/book_borrow/src/experiment/bookBorrowSystem.java",
+  "source_sha256": "e1cce442aeddf7653b78febc921b674ff2994c29f48e08c8b36778bfe0ea2425",
+  "command": "python scripts/prototype/check_sample.py",
+  "java_version": "24.0.1",
+  "javac_version": "24.0.1",
+  "compile_release": "17",
+  "checks": [
+    {"name": "compile_release_17", "status": "PASS"},
+    {"name": "menu_exit", "stdin": "9\n", "expected_output": ["-----图书借阅系统-----", "谢谢使用！"], "status": "PASS"},
+    {"name": "initial_books", "stdin": "2\n0\n9\n", "expected_output": ["数据结构", "数据库", "离散数学", "谢谢使用！"], "status": "PASS"}
+  ],
+  "status": "PASS",
+  "scope": "Compilation, menu exit and initial book listing only; no full business or model evaluation"
+}

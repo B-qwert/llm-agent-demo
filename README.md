@@ -6,7 +6,7 @@
 | --- | --- |
 | 开发环境 | Git 协作规范、Neo4j 与 Milvus 容器、DeepSeek API 接入及连通性检查；验收记录见[开发环境成果与验收报告](docs/开发环境成果与验收报告.md)。 |
 | 研究准备 | [文献调研与综述笔记](docs/文献调研与综述笔记.md)、[技术选型调研报告](docs/技术选型调研报告.md)。 |
-| 可行性论证 | [图书借阅原型测试记录](docs/图书借阅原型测试记录.md)：已选定 Java 样例并登记测试方案；入库、检索及问答评测待执行。 |
+| 可行性论证 | [图书借阅原型测试记录](docs/图书借阅原型测试记录.md)：[样例副本与复现说明](samples/book_borrow/README.md)已提交并冻结快照，编译及启动检查通过；入库、检索及问答评测待执行。 |
 
 开发环境面向 Windows、Docker Desktop、WSL 2 和 Linux 容器。以下步骤只用于启动现有底座和验证连接，不会启动尚未实现的业务问答系统。
 
@@ -65,6 +65,7 @@ python -m unittest discover -s tests -v
 - `bizcodeqa/llm.py`：可被后续业务模块复用的 LLM 客户端。
 - `bizcodeqa/check.py`：真实连通性验收，带失败退出码与 JSON 报告。
 - `scripts/`：本地配置生成与 PowerShell 一键操作。
+- `samples/book_borrow/`：图书借阅 Java 样例、快照登记与编译启动证据；运行 `python scripts/prototype/check_sample.py` 复现基础检查（需 JDK 17 或以上）。
 - [协作规范](CONTRIBUTING.md)与[团队协作规范](docs/团队协作规范.md)：分支、提交、评审及全周期协作约定。
 - [开发环境成果与验收报告](docs/开发环境成果与验收报告.md)：环境成果与连通性验收记录。
 - [文献调研与综述笔记](docs/文献调研与综述笔记.md)：课题相关研究、研究问题与后续验证方向。
