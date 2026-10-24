@@ -1,0 +1,230 @@
+{
+  "reviewer": "Codex agent, source-grounded assessment",
+  "team_review_status": "pending",
+  "review_date": "2026-10-24",
+  "rubric_path": "evaluations/book_borrow/rubric.md",
+  "source_commit_sha": "df2b56851beb70533c6f9eab441917f2379c4de6",
+  "gold_sha256": "4ef721cbb2a435041b5c1bce87fc7a2242420e13802888333a49f775d6c646b8",
+  "reviews": [
+    {
+      "question_id": "Q01",
+      "split": "dev",
+      "answer_sha256": "2fd78da9e54e5baa698682300f9c0f3d9ca1c66879aea65779bd3bf8f6683942",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "无法确定它借书前实际检查哪些条件",
+      "reason": "明确说无法确定，列出的可借性、读者存在、额度等均标注为一般假设，未确认实际四项借阅条件。"
+    },
+    {
+      "question_id": "Q02",
+      "split": "dev",
+      "answer_sha256": "dcbc4083ba012fb132ee5cd5659ba4679c06d41f2c8bf8d0bf74aada3d53123e",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "无法确定该 Java 图书借阅程序",
+      "reason": "明确无法确定，未回答本程序实际上禁止有未还图书的读者再次借书。"
+    },
+    {
+      "question_id": "Q03",
+      "split": "dev",
+      "answer_sha256": "6a8030bda3c1628686b781fc2f60f1ec0521174d52e2ffa00796d7881cac3add",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "无法确定“借书成功后更新哪些字段”",
+      "reason": "要求提供源码，未说明实际更新的五个数组字段。"
+    },
+    {
+      "question_id": "Q04",
+      "split": "dev",
+      "answer_sha256": "5c0dbe616b6f1a3cdcb7bb398d41d7bcfaa21a29b1bbd8f276174519c1784c8a",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "无法确定。你尚未提供",
+      "reason": "未判断实际是否允许删除；删除前校验仅作为建议，没有当作源码事实。"
+    },
+    {
+      "question_id": "Q05",
+      "split": "dev",
+      "answer_sha256": "f9175d519f1dc03494e242cdd278b065271367b19cd809ec828ab8a299c4e786",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "无法确定该 Java 图书借阅程序",
+      "reason": "明确不能断言允许或禁止，未回答本程序实际拒绝删除未还书读者。"
+    },
+    {
+      "question_id": "Q06",
+      "split": "eval",
+      "answer_sha256": "8a7150e2f032272acbb23c2cf8d268fac7aabac47f7476fd53936cf2c298b03d",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "无法确定这个 Java 图书借阅程序的排行榜排序规则",
+      "reason": "降序排列只作为通用建议，还提出并列排序可能性，没有确认实际借出次数降序及同步交换。"
+    },
+    {
+      "question_id": "Q07",
+      "split": "eval",
+      "answer_sha256": "66470a78ee353e1573f1306d0d41a45b2c6d8627ebe8df14fe707fdcdd0c5db1",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "我无法确定该 Java 图书借阅程序",
+      "reason": "明确无法确定；ISBN和库存等仅作为常见校验举例，未答出本程序容量、非空及重名检查。"
+    },
+    {
+      "question_id": "Q08",
+      "split": "eval",
+      "answer_sha256": "e15614e384b470a79143c6fef22f7ec76996f327036c8a751a3af3265c7e67e9",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "无法确定该 Java 图书借阅程序",
+      "reason": "只建议做非空校验，未发现本程序恰好缺少姓名和ID非空检查。"
+    },
+    {
+      "question_id": "Q09",
+      "split": "eval",
+      "answer_sha256": "dee04946f4710b5daedf41de0af4ee4f1a96646cd514ddd46016d6c670c0bd74",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "我无法确定该 Java 图书借阅程序的租金如何计算",
+      "reason": "未给出日字段相减、负数加30和每日0.5元的实际实现，也未识别其日期缺陷。"
+    },
+    {
+      "question_id": "Q10",
+      "split": "eval",
+      "answer_sha256": "73a73e8bffd54767ffe415e223c5084f51bece1402144d26e3dce2820deb947d",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "无法确定这个 Java 图书借阅程序",
+      "reason": "无法确定是否核验ID，未说明实际只按书名与未还状态匹配。"
+    },
+    {
+      "question_id": "Q11",
+      "split": "eval",
+      "answer_sha256": "63d077373dce0a32e0e3a56acd3aaf75c705894c4b489896484014413ce06571",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "因此不能判断新增数据是否会保留",
+      "reason": "区分了不同持久化可能性但无法确定，未说明该程序使用内存数组并重新初始化。"
+    },
+    {
+      "question_id": "Q12",
+      "split": "eval",
+      "answer_sha256": "95b2bb742c2abbb9557f67461263dcf9e8f7898bdd4a09ab2367785dfd2258fd",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "因此不能说明“借阅”“归还”分别通过哪个菜单项",
+      "reason": "要求菜单源码，未给出选项4/5和startSystem调用关系。"
+    },
+    {
+      "question_id": "Q13",
+      "split": "eval",
+      "answer_sha256": "d48553e5ac2359bfb8d8be5651fb8700727e08ac1675d43b48cb7a5d4852a46c",
+      "correctness": "abstained",
+      "unsupported_project_claim": true,
+      "unsupported_behavior_claim": false,
+      "claim_note": "无依据的“京东”身份标签；未断言业务实现",
+      "quote": "该京东 Java 图书借阅程序",
+      "reason": "“可借/0次”明确作为假设，不计项目事实命中；回答还无依据插入“京东”项目标签，单列身份标签编造。"
+    },
+    {
+      "question_id": "Q14",
+      "split": "eval",
+      "answer_sha256": "d4bb0e6d39289654b65cc160a6712726764e93677f448a1204ba15d004d55c14",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "我不能说明“删除图书时如何保持数组对应”的实际行为",
+      "reason": "数组移动仅作为一般建议，并列其他可能实现，未确认实际四数组同步前移及清空末槽。"
+    },
+    {
+      "question_id": "Q15",
+      "split": "eval",
+      "answer_sha256": "1b2422c0ad180e9f81ca1f6d1cd1ec89c3103cfc3087f767808677c5d11c2fc2",
+      "correctness": "correct",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "不能说明管理员权限或逾期提醒的实际行为",
+      "reason": "负例按预定规则判正确：明确现有信息不足以确定权限或提醒规则，未虚构实现；不表示模型发现源码缺少这些功能。"
+    },
+    {
+      "question_id": "Q16",
+      "split": "eval",
+      "answer_sha256": "0cba478f3c7ff3cbc88ffed311a9cf60006d37e3ec3354b3da28081e0ec6b59e",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "无法确定该程序的实际行为",
+      "reason": "无法判断日期在哪个阶段处理，未说明借书直接保存、归还拆分解析日字段。"
+    },
+    {
+      "question_id": "Q17",
+      "split": "eval",
+      "answer_sha256": "f28b9462bc83b09656dd74760c082093f822b3c3466c37f06ffe1456e18dbe19",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "无法确定该程序“查看可借图书”时“借出日期”一栏显示什么",
+      "reason": "可能为空等表述是一般假设，未回答本程序界面实际显示“无”。"
+    },
+    {
+      "question_id": "Q18",
+      "split": "eval",
+      "answer_sha256": "7b7fe86bf3814438aa5088ca98943fcc40d142a9cb1abfc4dd198cfb13a2a262",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "不能说明新增图书的容量上限",
+      "reason": "未给出实际容量50、首个null槽位和无空位时拒绝的规则。"
+    },
+    {
+      "question_id": "Q19",
+      "split": "eval",
+      "answer_sha256": "822dbf83450cf975b6e9f34b60c66b7f04a0917e89c199f3a194790d2a5a4315",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "无法确定“归还成功后”实际复位了图书和借阅人的哪些状态",
+      "reason": "要求归还源码，未确认四项复位及借阅次数不递减。"
+    },
+    {
+      "question_id": "Q20",
+      "split": "eval",
+      "answer_sha256": "3079823b3dd9be202f794a79942728c9e291f6240605d5a3035f3464071bfb28",
+      "correctness": "abstained",
+      "unsupported_project_claim": false,
+      "unsupported_behavior_claim": false,
+      "claim_note": "",
+      "quote": "无法判断排行榜排序实现是否会改变原始图书数组顺序",
+      "reason": "明确无法确定原数组是否改变，未说明本程序复制到List排序。"
+    }
+  ]
+}

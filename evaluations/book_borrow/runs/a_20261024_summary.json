@@ -1,0 +1,102 @@
+{
+  "source_commit_sha": "df2b56851beb70533c6f9eab441917f2379c4de6",
+  "reviewer": "Codex agent, source-grounded assessment",
+  "team_review_status": "pending",
+  "requested_models": [
+    "deepseek-v4-flash"
+  ],
+  "returned_models": [
+    "deepseek-flash"
+  ],
+  "retrieval_recall_at_k": null,
+  "source_citation_coverage": null,
+  "groups": {
+    "dev": {
+      "planned": 5,
+      "successful_calls": 5,
+      "errors": 0,
+      "incomplete": 0,
+      "counts": {
+        "correct": 0,
+        "partial": 0,
+        "incorrect": 0,
+        "abstained": 5,
+        "not_scored": 0
+      },
+      "strict_accuracy": 0.0,
+      "correct_over_planned": 0.0,
+      "business_questions": 5,
+      "business_correct": 0,
+      "unsupported_project_claims": 0,
+      "unsupported_behavior_claims": 0,
+      "mean_latency_seconds": 1.666,
+      "median_latency_seconds": 1.347,
+      "min_latency_seconds": 1.262,
+      "max_latency_seconds": 2.679,
+      "sum_request_latency_seconds": 8.33,
+      "usage": {
+        "prompt_tokens": 547,
+        "completion_tokens": 369,
+        "total_tokens": 916
+      }
+    },
+    "eval": {
+      "planned": 15,
+      "successful_calls": 15,
+      "errors": 0,
+      "incomplete": 0,
+      "counts": {
+        "correct": 1,
+        "partial": 0,
+        "incorrect": 0,
+        "abstained": 14,
+        "not_scored": 0
+      },
+      "strict_accuracy": 0.06666666666666667,
+      "correct_over_planned": 0.06666666666666667,
+      "business_questions": 14,
+      "business_correct": 0,
+      "unsupported_project_claims": 1,
+      "unsupported_behavior_claims": 0,
+      "mean_latency_seconds": 1.39,
+      "median_latency_seconds": 1.313,
+      "min_latency_seconds": 1.002,
+      "max_latency_seconds": 2.84,
+      "sum_request_latency_seconds": 20.848,
+      "usage": {
+        "prompt_tokens": 1666,
+        "completion_tokens": 1086,
+        "total_tokens": 2752
+      }
+    },
+    "all": {
+      "planned": 20,
+      "successful_calls": 20,
+      "errors": 0,
+      "incomplete": 0,
+      "counts": {
+        "correct": 1,
+        "partial": 0,
+        "incorrect": 0,
+        "abstained": 19,
+        "not_scored": 0
+      },
+      "strict_accuracy": 0.05,
+      "correct_over_planned": 0.05,
+      "business_questions": 19,
+      "business_correct": 0,
+      "unsupported_project_claims": 1,
+      "unsupported_behavior_claims": 0,
+      "mean_latency_seconds": 1.459,
+      "median_latency_seconds": 1.338,
+      "min_latency_seconds": 1.002,
+      "max_latency_seconds": 2.84,
+      "sum_request_latency_seconds": 29.178,
+      "usage": {
+        "prompt_tokens": 2213,
+        "completion_tokens": 1455,
+        "total_tokens": 3668
+      }
+    }
+  }
+}
