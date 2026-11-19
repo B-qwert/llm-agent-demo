@@ -78,6 +78,30 @@ services:
       timeout: 5s
       retries: 30
       start_period: 90s
+  platform:
+    profiles: ["platform"]
+    image: bizcodeqa-check:latest
+    build: .
+    env_file: .env
+    environment:
+      NEO4J_URI: bolt://neo4j:7687
+      MILVUS_URI: http://milvus:19530
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+    entrypoint: ["python", "-m", "bizcodeqa.platform.server"]
+    command: ["--container", "--port", "8765"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/api/status', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    ports:
+      - "127.0.0.1:8765:8765"
+    volumes:
+      - ./bizcodeqa:/app/bizcodeqa:ro
+      - ./web:/app/web:ro
+      - ./samples:/app/samples:ro
+      - ./reports:/app/reports
   check:
     profiles: ["tools"]
     build: .

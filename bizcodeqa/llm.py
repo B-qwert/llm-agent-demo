@@ -12,7 +12,7 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
-def chat(messages):
+def chat(messages, *, max_tokens=None, timeout_seconds=None):
     base = required('LLM_BASE_URL').rstrip('/')
     parsed = urllib.parse.urlsplit(base)
     if parsed.scheme not in ('https', 'http') or not parsed.hostname:
@@ -23,8 +23,8 @@ def chat(messages):
         raise ValueError('Remote LLM endpoints must use HTTPS')
     key = required('LLM_API_KEY')
     model = required('LLM_MODEL')
-    timeout = float(os.getenv('LLM_TIMEOUT_SECONDS', '60'))
-    tokens = int(os.getenv('LLM_MAX_TOKENS', '128'))
+    timeout = float(timeout_seconds if timeout_seconds is not None else os.getenv('LLM_TIMEOUT_SECONDS', '60'))
+    tokens = int(max_tokens if max_tokens is not None else os.getenv('LLM_MAX_TOKENS', '128'))
     if not 0 < timeout <= 300 or not 1 <= tokens <= 4096:
         raise ValueError('Invalid LLM timeout or token limit')
     payload = {'model': model, 'messages': messages, 'max_tokens': tokens, 'stream': False}
@@ -55,4 +55,5 @@ def chat(messages):
             raise ValueError
     except (KeyError, IndexError, TypeError, ValueError):
         raise RuntimeError('LLM returned no non-empty text completion') from None
-    return {'content': content, 'model': data.get('model', model), 'usage': data.get('usage', {})}
+    return {'content': content, 'model': data.get('model', model), 'usage': data.get('usage', {}),
+            'finish_reason': data['choices'][0].get('finish_reason')}
