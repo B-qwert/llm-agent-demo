@@ -37,11 +37,29 @@ TOP_K = 5
 # 仓库 .env 里 LLM_MAX_TOKENS=128，对问答偏短；只在本进程内放宽，不改团队配置。
 os.environ["LLM_MAX_TOKENS"] = "400"
 
-COLLECTIONS = {
-    "method": "code_chunks_v1",
-    "paragraph": "code_chunks_v1_paragraph",
-    "fixed": "code_chunks_v1_fixed",
+# 索引由团队统一的 prepare 流程产出，状态写在 reports/platform（已被 .gitignore 排除）。
+# 前端沿用的三个 key 映射到对应 profile 的 index 文件，集合名不再写死。
+INDEX_DIR = REPO / "reports" / "platform"
+PROFILE_FILES = {
+    "method": "index.json",
+    "paragraph": "index_paragraph_blank_v1.json",
+    "fixed": "index_character_400_80.json",
 }
+PROFILE_LABELS = {"method": "按方法/字段", "paragraph": "按段落", "fixed": "按定长"}
+
+
+def load_index(chunk):
+    """读某个切分配置的激活索引；文件不存在返回 None。"""
+    path = INDEX_DIR / PROFILE_FILES.get(chunk, "index.json")
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def chunk_lookup(index):
+    """chunk_id → 片段本体，用来取 Milvus 里不存的正文。"""
+    return {c["chunk_id"]: c for c in index.get("chunks", [])}
 
 # 源码目录与查询历史都放在工作台自己的目录里，不进仓库。
 SOURCE_DIRS = [HERE.parent / "code-slicing" / "samples", REPO / "samples"]
@@ -132,29 +150,43 @@ def embed(text):
 
 
 def retrieve(question, chunk, k=TOP_K):
-    name = COLLECTIONS.get(chunk, "code_chunks_v1")
+    """按团队口径检索：同一快照过滤 + 查询指令前缀 + 方法模式只召回 Method。"""
+    index = load_index(chunk)
+    if not index:
+        raise RuntimeError("未找到 " + chunk + " 的索引（先跑 code-slicing/slice_to_milvus.py）")
+    name = index["collection"]
     client = milvus()
     if not client.has_collection(name):
-        raise RuntimeError("集合不存在：" + name + "（先跑 slice_to_milvus.py）")
-    vec = embed(question)
+        raise RuntimeError("集合不存在：" + name + "（重新跑 slice_to_milvus.py）")
+    vec = embed(index.get("query_instruction", "") + question)
+    query_filter = (
+        "repository_id == " + json.dumps(index["repository_id"])
+        + " and snapshot_id == " + json.dumps(index["snapshot_id"])
+    )
+    if index.get("chunking", {}).get("strategy") == "method":
+        query_filter += ' and entity_type == "Method"'
     rows = client.search(
         collection_name=name,
         data=[vec],
         limit=k,
-        output_fields=["chunk_id", "symbol_id", "file_path", "start_line", "end_line", "text"],
+        filter=query_filter,
+        output_fields=["chunk_id", "symbol_id", "start_line", "end_line", "content_sha256"],
         search_params={"metric_type": "COSINE"},
     )[0]
+    lookup = chunk_lookup(index)
     hits = []
     for row in rows:
         ent = row.get("entity", {})
+        cid = ent.get("chunk_id") or row.get("id")
+        src = lookup.get(cid, {})
         hits.append({
-            "chunk_id": row.get("id"),
+            "chunk_id": cid,
             "score": round(float(row.get("distance", 0.0)), 4),
-            "symbol_id": ent.get("symbol_id", ""),
-            "file_path": ent.get("file_path", ""),
-            "start_line": int(ent.get("start_line", 0)),
-            "end_line": int(ent.get("end_line", 0)),
-            "text": ent.get("text", ""),
+            "symbol_id": ent.get("symbol_id", src.get("symbol_id", "")),
+            "file_path": src.get("file_path", ""),
+            "start_line": int(ent.get("start_line", src.get("start_line", 0)) or 0),
+            "end_line": int(ent.get("end_line", src.get("end_line", 0)) or 0),
+            "text": src.get("code", ""),
         })
     return name, hits
 
@@ -221,30 +253,29 @@ def graph_context(symbol_ids):
 
 
 def chunk_map(chunk):
-    """返回某个集合里全部切片的行号区间，用于画切分视图。"""
-    name = COLLECTIONS.get(chunk, "code_chunks_v1")
-    client = milvus()
-    if not client.has_collection(name):
-        raise RuntimeError("集合不存在：" + name)
-    rows = client.query(
-        collection_name=name,
-        filter="chunk_index >= 0",
-        output_fields=["chunk_index", "start_line", "end_line", "symbol_id"],
-        limit=500,
-        consistency_level="Strong",
-    )
-    rows = sorted(rows, key=lambda r: (int(r["start_line"]), int(r["chunk_index"])))
+    """返回某个切分配置的全部切片区间，直接读激活索引，不再查 Milvus。"""
+    index = load_index(chunk)
+    if not index:
+        raise RuntimeError("未找到 " + chunk + " 的索引（先跑 code-slicing/slice_to_milvus.py）")
+    chunks = sorted(index.get("chunks", []), key=lambda c: (int(c.get("start_line", 0)), int(c.get("end_line", 0))))
     segs = [
         {
-            "i": int(r["chunk_index"]),
-            "start": int(r["start_line"]),
-            "end": int(r["end_line"]),
-            "symbol": (r.get("symbol_id") or "")[:12],
+            "i": i,
+            "start": int(c.get("start_line", 0)),
+            "end": int(c.get("end_line", 0)),
+            "symbol": (c.get("symbol_id") or "")[:12],
+            "name": c.get("name", ""),
         }
-        for r in rows
+        for i, c in enumerate(chunks)
     ]
     total = max([s["end"] for s in segs], default=0)
-    return {"chunk": chunk, "collection": name, "count": len(segs), "total_lines": total, "segments": segs}
+    return {
+        "chunk": chunk,
+        "collection": index["collection"],
+        "count": len(segs),
+        "total_lines": total,
+        "segments": segs,
+    }
 
 
 def graph_overview(limit=60):
@@ -273,6 +304,26 @@ def graph_overview(limit=60):
     except Exception as e:
         out["error"] = str(e)[:120]
         return out
+
+
+TOTAL_LINES = 383
+
+
+def method_span(name):
+    """期望方法的 [起始行, 结束行]，用来判断片段有没有覆盖到它。"""
+    for i, (m, start) in enumerate(METHODS):
+        if m == name:
+            end = METHODS[i + 1][1] - 1 if i + 1 < len(METHODS) else TOTAL_LINES
+            return start, end
+    return None
+
+
+def cover_ratio(start, end, span):
+    """片段盖住期望方法的比例，0 表示完全没沾到。"""
+    if not span:
+        return 0.0
+    inter = min(int(end), span[1]) - max(int(start), span[0]) + 1
+    return max(inter, 0) / (span[1] - span[0] + 1)
 
 
 def method_of_line(line, total=384):
@@ -325,30 +376,30 @@ def overview():
         "errors": [],
     }
     client = milvus()
-    for key, name in COLLECTIONS.items():
-        row = {"key": key, "label": key, "name": name, "exists": False, "count": 0, "lines": 0}
-        try:
-            if not client.has_collection(name):
-                out["collections"].append(row)
-                continue
-            rows = client.query(
-                collection_name=name, filter="chunk_index >= 0",
-                output_fields=["start_line", "end_line", "chunk_index"],
-                limit=1000, consistency_level="Strong",
-            )
-            row["exists"] = True
-            row["count"] = len(rows)
-            row["lines"] = max([int(r.get("end_line", 0)) for r in rows], default=0)
-        except Exception as exc:
-            out["errors"].append(f"{name}: {str(exc)[:80]}")
+    for key in PROFILE_FILES:
+        index = load_index(key)
+        row = {
+            "key": key,
+            "label": PROFILE_LABELS.get(key, key),
+            "name": index["collection"] if index else "-",
+            "exists": bool(index),
+            "count": len(index.get("chunks", [])) if index else 0,
+            "lines": max([int(c.get("end_line", 0)) for c in index.get("chunks", [])], default=0) if index else 0,
+            "profile": index.get("chunking", {}).get("profile_id", "") if index else "",
+        }
         out["collections"].append(row)
-    try:
-        desc = client.describe_collection(COLLECTIONS["method"])
-        for f in desc.get("fields", []):
-            if f.get("name") == "vector":
-                out["dim"] = int(f.get("params", {}).get("dim", 1024))
-    except Exception:
-        pass
+    for key in PROFILE_FILES:
+        index = load_index(key)
+        if not index:
+            continue
+        try:
+            if not client.has_collection(index["collection"]):
+                out["errors"].append(f"{index['collection']}: 集合不存在，需要重跑切片入库")
+                continue
+            out["dim"] = int(index.get("embedding_dimension", out["dim"]))
+        except Exception as exc:
+            out["errors"].append(f"{index['collection']}: {str(exc)[:80]}")
+        break
 
     hist = read_history(50)
     hits = [h for h in hist if h.get("top_score") is not None]
@@ -390,29 +441,39 @@ def eval_run(chunk="method"):
     for question, expected in EVAL_SET:
         t0 = time.time()
         try:
-            _, hits = retrieve(question, chunk, 3)
+            _, hits = retrieve(question, chunk, 5)
         except Exception as exc:
             rows.append({"question": question, "expected": expected, "got": "—",
-                         "hit": False, "error": str(exc)[:80], "ms": 0})
+                         "hit": False, "hit5": False, "cover": 0.0,
+                         "error": str(exc)[:80], "ms": 0})
             continue
         top = hits[0] if hits else None
         got = method_of_line(int(top["start_line"])) if top else "—"
+        span = method_span(expected)
+        # 字符与段落段会跨方法：期望方法至少被盖住一半才算命中，擦边不算
+        c1 = cover_ratio(top["start_line"], top["end_line"], span) if top else 0.0
+        c5 = max([cover_ratio(h["start_line"], h["end_line"], span) for h in hits], default=0.0)
         rows.append({
             "question": question,
             "expected": expected,
             "got": got,
-            "hit": bool(top) and got == expected,
+            "hit": c1 >= 0.5,
+            "hit5": c5 >= 0.5,
+            "cover": round(c1, 3),
             "score": float(top["score"]) if top else 0.0,
             "lines": f"{top['start_line']}-{top['end_line']}" if top else "—",
             "ms": int((time.time() - t0) * 1000),
         })
     hit = len([r for r in rows if r["hit"]])
+    hit5 = len([r for r in rows if r.get("hit5")])
     return {
         "chunk": chunk,
         "rows": rows,
         "hit": hit,
+        "hit5": hit5,
         "total": len(rows),
         "rate": round(hit / len(rows), 3) if rows else 0.0,
+        "rate5": round(hit5 / len(rows), 3) if rows else 0.0,
         "elapsed_ms": int((time.time() - started) * 1000),
     }
 
@@ -482,7 +543,11 @@ class Handler(BaseHTTPRequestHandler):
                 state["ok"] = False
                 state["ollama_error"] = str(e)[:120]
             try:
-                state["milvus"] = milvus().has_collection("code_chunks_v1")
+                client = milvus()
+                state["milvus"] = any(
+                    (lambda idx: bool(idx) and client.has_collection(idx["collection"]))(load_index(k))
+                    for k in PROFILE_FILES
+                )
             except Exception as e:
                 state["ok"] = False
                 state["milvus_error"] = str(e)[:120]
@@ -523,7 +588,7 @@ class Handler(BaseHTTPRequestHandler):
                 length = int(self.headers.get("Content-Length", "0"))
                 payload = json.loads(self.rfile.read(length) or b"{}")
                 chunk = str(payload.get("chunk", "method"))
-                if chunk not in COLLECTIONS:
+                if chunk not in PROFILE_FILES:
                     chunk = "method"
                 self._json(eval_run(chunk))
             except Exception as exc:
@@ -546,7 +611,7 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if mode not in ("A", "B", "C"):
                 mode = "B"
-            if chunk not in COLLECTIONS:
+            if chunk not in PROFILE_FILES:
                 chunk = "method"
             self._json(run(question, mode, chunk))
         except Exception as exc:

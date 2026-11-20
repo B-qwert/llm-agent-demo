@@ -380,7 +380,7 @@
       <span style="color:var(--line-strong);">|</span>
       <code>df2b568</code>
       <span style="color:var(--line-strong);">|</span>
-      <span id="fragTop">12 段</span>
+      <span id="fragTop">20 段</span>
     </div>
     <div class="bar-right"><span class="live"></span><span id="connState">连接中…</span></div>
   </div>
@@ -443,7 +443,7 @@
     <summary>
       <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2l5 4-5 4" fill="none" stroke="#6C7076" stroke-width="1.4"/></svg>
       检索设置
-      <b id="setSummary">按方法切分 · 12 段</b>
+      <b id="setSummary">按方法切分 · 20 段</b>
       <span style="color:var(--faint);">仅 B / C 生效</span>
     </summary>
     <div class="settings-body">
@@ -454,7 +454,7 @@
           <option value="paragraph">按逻辑段落</option>
           <option value="fixed">按固定字符长度</option>
         </select>
-        <span class="count-badge" id="setCount">12 段</span>
+        <span class="count-badge" id="setCount">20 段</span>
       </div>
       <div class="set-note" id="setNote">按完整方法或字段声明切分，保留方法签名与所属类，行号与源码一一对应。</div>
       <div class="set-state" id="setState"></div>
@@ -511,7 +511,7 @@
   };
 
   var CHUNKS = {
-    method:{ label:"按方法 / 字段", short:"按方法切分", count:12,
+    method:{ label:"按方法 / 字段", short:"按方法切分", count:20,
       desc:"按完整方法或字段声明切分，保留方法签名与所属类，行号与源码一一对应。" },
     paragraph:{ label:"按逻辑段落", short:"按段落切分", count:15,
       desc:"按代码里现成的逻辑块切分：一个 if、一个 for、一段连续语句算一块，空行与注释也是分界。" },
@@ -755,6 +755,7 @@
       $("idxMax").textContent = max;
       rows.innerHTML = "";
       list.forEach(function(d){
+        if(d && d.chunk && d.count){ CHUNKS[d.chunk].count = d.count; }
         if(!d || d.error || !d.segments) return;
         var box = document.createElement("div");
         box.className = "idx-row";
@@ -768,6 +769,7 @@
         rows.appendChild(box);
       });
       $("indexView").hidden = false;
+      syncSetting();
     }).catch(function(){});
   }
 
@@ -983,6 +985,7 @@
     $("evalSum").className = "eval-sum on";
     $("evalSum").innerHTML = '<b>' + d.hit + ' / ' + d.total + '</b>' +
       '<span>首位命中率 ' + rate + '%</span>' +
+      '<span>Top5 召回 ' + (d.hit5 == null ? "—" : d.hit5 + ' / ' + d.total) + '</span>' +
       '<span>' + esc(CHUNKS[d.chunk] ? CHUNKS[d.chunk].label : d.chunk) + '检索</span>' +
       '<span>总耗时 ' + d.elapsed_ms + ' ms</span>';
 
@@ -992,6 +995,7 @@
         '<td>' + esc(r.expected) + '</td>' +
         '<td>' + esc(r.got) + '</td>' +
         '<td><span class="pill ' + (r.hit ? "ok" : "no") + '">' + (r.hit ? "通过" : "偏了") + '</span></td>' +
+        '<td><span class="pill ' + (r.hit5 ? "ok" : "no") + '">' + (r.hit5 ? "有" : "无") + '</span></td>' +
         '<td class="mono">' + (r.score == null ? "—" : Number(r.score).toFixed(3)) + '</td>' +
         '<td class="mono">' + (r.ms || 0) + ' ms</td>' +
       '</tr>';
@@ -999,8 +1003,8 @@
 
     $("evalBox").innerHTML =
       '<table class="eval-table"><colgroup>' +
-        '<col style="width:38%"><col style="width:17%"><col style="width:17%"><col style="width:10%"><col style="width:9%"><col style="width:9%">' +
-      '</colgroup><thead><tr><th>问题</th><th>期望方法</th><th>首位命中</th><th>结果</th><th>相似度</th><th>耗时</th></tr></thead>' +
+        '<col style="width:34%"><col style="width:15%"><col style="width:15%"><col style="width:9%"><col style="width:8%"><col style="width:10%"><col style="width:9%">' +
+      '</colgroup><thead><tr><th>问题</th><th>期望方法</th><th>首位命中</th><th>结果</th><th>Top5</th><th>相似度</th><th>耗时</th></tr></thead>' +
       '<tbody>' + rows + '</tbody></table>';
   }
 
