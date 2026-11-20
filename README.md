@@ -74,7 +74,7 @@ python -m unittest discover -s tests -v
 - [技术选型调研报告](docs/技术选型调研报告.md)：图数据库、向量数据库和 LLM API 的选型依据。
 - [开题报告](docs/开题报告.md)：研究目标、技术路线、实验设计与进度安排。
 - [Schema 设计规范](docs/Schema设计规范.md)：已确认采用的 v0.1.0 实体、关系、标识、溯源与版本规则。
-- [图书借阅原型测试记录](docs/图书借阅原型测试记录.md)：样例范围、候选问题与参考证据、实施步骤、对比评测及执行记录。
+- [图书借阅原型测试记录](docs/图书借阅原型测试记录.md)：样例冻结、编译启动证据和实施进度。[人工评测与功能验证清单](docs/图书借阅人工评测参考答案与功能验证清单.md)记录参考答案、评分口径及验证结果。
 
 镜像版本参考 [Neo4j 5 发布说明](https://community.neo4j.com/t/neo4j-5-release/66912) 与 [Milvus 官方 Compose 配置](https://github.com/milvus-io/milvus/blob/v2.6.22/deployments/docker/standalone/docker-compose.yml)。后者在 v2.6.22 源码标签中仍引用 Milvus v2.6.21，本工程沿用 Milvus 与 etcd 版本；原 MinIO 镜像仓库现已无法公开拉取，因此改用 Coolify 从 MinIO 源码构建的固定版本镜像，而未将 Milvus 源码标签号当作镜像版本。版本固定用于开发复现，正式部署前需重新评估维护与升级。
 
