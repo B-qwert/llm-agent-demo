@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>知码 · 业务逻辑问询工作台</title><link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <aside class="sidebar" aria-label="主导航">
+    <a class="brand" href="/" aria-label="知码首页"><span class="brand-icon">知</span><span>知码<span class="brand-en">CODE INSIGHT</span></span></a>
+    <div class="workspace-label">研究工作空间 <span class="tiny-tag">LOCAL</span></div>
+    <button class="nav-item active" id="nav-workbench"><span>◈</span> 问询工作台 <span class="nav-arrow">↗</span></button>
+    <button class="nav-item" id="nav-history"><span>◷</span> 问答记录 <span class="count" id="history-count">0</span></button>
+    <div class="side-divider"></div><p class="side-label">当前样例</p>
+    <div class="project-card"><span class="project-icon">J</span><div><strong>图书借阅系统</strong><small>Java · 单文件原型</small></div></div>
+    <div class="project-detail"><span>源码版本</span><code id="snapshot-side">待准备</code><span>证据片段</span><b id="chunk-count">—</b></div>
+    <div class="side-note"><span class="note-icon">↳</span><p>从代码出发，理解业务。<br>让每个结论都有迹可循。</p></div>
+    <div class="sidebar-footer"><span class="avatar">研</span><div>三人课题研究<small>可行性论证 · Prototype</small></div><span class="online-dot"></span></div>
+  </aside>
+  <div class="app-shell">
+    <header class="topbar"><div class="breadcrumb">工作空间 <span>/</span> <strong id="breadcrumb-current">问询工作台</strong></div><div class="top-actions"><span class="connection" id="connection"><i></i> 连接中</span><button class="text-button" id="refresh-status">刷新状态</button></div></header>
+    <main>
+      <section id="workbench">
+        <div class="page-heading"><div><div class="eyebrow">BUSINESS LOGIC EXPLORER</div><h1>读懂代码背后的业务逻辑<span class="heading-dot">.</span></h1><p>选择问询方案，提出你的问题，探索真实代码中的答案。</p></div><span class="version-tag">原型工作台 <b>v0.1</b></span></div>
+        <div class="mode-section"><div class="section-line"><h2>选择问询方案</h2><span>同一问题 · 三种证据路径</span></div>
+          <div class="mode-grid" role="group" aria-label="问询方案">
+            <button class="mode-card selected" data-mode="A" aria-pressed="true"><div class="mode-card-top"><span class="mode-letter">A</span><span class="radio-dot"></span></div><strong>直接大模型问答</strong><p>建立没有项目代码的回答基线</p><span class="mode-flow">问题 <b>→</b> DeepSeek</span></button>
+            <button class="mode-card" data-mode="B" aria-pressed="false"><div class="mode-card-top"><span class="mode-letter">B</span><span class="radio-dot"></span></div><strong>向量检索增强</strong><p>检索相关代码，为回答提供证据</p><span class="mode-flow">Milvus <b>→</b> DeepSeek</span></button>
+            <button class="mode-card" data-mode="C" aria-pressed="false"><div class="mode-card-top"><span class="mode-letter">C</span><span class="radio-dot"></span></div><strong>图谱与向量增强</strong><p>沿代码关系，补充业务上下文</p><span class="mode-flow">Milvus <b>+</b> Neo4j <b>→</b> DeepSeek</span></button>
+          </div>
+        </div>
+        <section class="chunking-panel" aria-label="代码切分方式">
+          <div class="chunking-heading"><h2>代码切分方式</h2><span>用于 B / C；A 不检索代码</span></div>
+          <div class="chunking-controls">
+            <label for="chunking-strategy">切分单位<select id="chunking-strategy"><option value="method">按方法 / 字段切分</option><option value="character">按字符长度切分</option><option value="ast">按 AST 语句切分</option><option value="token">按 Token 数切分</option><option value="paragraph">按空行 / 段落切分</option></select></label>
+            <label for="chunk-size" id="chunk-size-label" hidden><span id="chunk-size-unit">每块字符数</span><input id="chunk-size" type="number" min="200" max="4000" step="100" value="800"></label>
+            <label for="chunk-overlap" id="chunk-overlap-label" hidden><span id="chunk-overlap-unit">重叠字符数</span><input id="chunk-overlap" type="number" min="0" max="400" step="50" value="100"></label>
+            <button id="prepare-index" class="secondary-button">准备该索引</button>
+          </div>
+          <p id="chunking-description">按完整方法或字段声明切分，保留现有的 20 个片段。</p>
+          <div class="chunking-status" id="chunking-status" role="status">正在读取索引状态…</div>
+        </section>
+        <div class="workbench-grid">
+          <div class="conversation-column">
+            <div class="question-panel"><div class="panel-title"><span class="title-icon">↗</span><h2>你想了解什么？</h2><span class="independent-tag">独立问题</span></div><label class="sr-only" for="question">输入业务逻辑问题</label><textarea id="question" maxlength="2000" placeholder="例如：借书前需要检查哪些条件？有未还图书时还能再借吗？"></textarea><div class="composer-bottom"><span class="keyboard-hint"><span id="char-count">0</span>/2000 <span class="separator">·</span> Ctrl + Enter 发送</span><button id="send" class="primary-button">开始问询 <span>↗</span></button></div></div>
+            <div class="mode-hint" id="mode-hint"><span>ⓘ</span><p>A 模式不会提供源码。模型可能无法确定这个项目的实际实现，这也是基线测试的一部分。</p></div>
+            <div id="error" class="error-banner" role="alert" hidden></div>
+            <section id="empty-state" class="empty-state"><div class="orbit-art" aria-hidden="true"><span class="orbit-node n1">{ }</span><span class="orbit-node n2">↗</span><span class="orbit-node n3">⌘</span><span class="orbit-center">?</span></div><h3>从一个业务问题开始</h3><p>可以直接输入，也可以选择一个示例问题。</p><div class="suggestions"><button data-question="借书前检查哪些条件？">借书前检查哪些条件？ <span>↗</span></button><button data-question="租金如何计算，跨月是否准确？">跨月借阅的租金怎么算？ <span>↗</span></button><button data-question="归还成功后，图书和借阅人的哪些状态被复位？">归还图书后哪些状态会改变？ <span>↗</span></button><button data-question="排行榜排序会改变原始图书数组的顺序吗？">排行榜会改变原始数组吗？ <span>↗</span></button></div></section>
+            <section id="loading" class="loading-panel" aria-live="polite" hidden><span class="spinner"></span><div><strong id="loading-label">正在生成回答…</strong><p>正在执行所选方案，请稍候。不会自动切换或降级方案。</p></div><span id="elapsed">0s</span></section>
+            <section id="answer-section" class="answer-section" hidden><div class="result-heading"><div><span class="result-mark">✦</span><h2>问询结果</h2><span id="result-mode" class="result-mode">方案 A</span></div><button id="export-current" class="text-button">导出 JSON ↓</button></div><p id="answered-question" class="answered-question"></p><div id="answer-text" class="answer-text"></div><div id="warnings" class="warnings"></div><div id="answer-meta" class="answer-meta"></div></section>
+            <section id="comparison" class="comparison" hidden><div class="section-line"><h2>同题方案对比</h2><span>各方案独立调用，互不共享答案</span></div><div id="comparison-results"></div></section>
+          </div>
+          <aside class="inspector" aria-label="检索与证据"><div class="inspector-heading"><h2>证据与运行信息</h2><span class="inspector-dot"></span></div><div class="inspector-tabs"><button class="active" data-tab="evidence">源码证据 <span id="evidence-count">0</span></button><button data-tab="trace">执行路径</button></div><div id="evidence-panel"><div id="evidence-empty" class="evidence-empty"><span>⌁</span><h3>等待代码证据</h3><p>A 模式不检索源码。<br>B / C 模式会在这里展示引用片段。</p></div><div id="evidence-list"></div></div><div id="trace-panel" hidden><div id="trace-content" class="trace-content">发起问询后查看实际执行路径。</div></div><div class="inspector-settings"><label for="top-k">向量召回 Top-K</label><select id="top-k"><option value="2">2 个片段</option><option value="3">3 个片段</option><option value="5" selected>5 个片段</option></select><p>先检索方法代码；C 额外补充最多 3 个图关联片段。每次请求使用相同的完整片段预算。</p></div><button id="compare" class="compare-button">对比 A / B / C <span>↔</span></button><p class="compare-note">同题进行三次独立模型调用，会消耗额度。</p></aside>
+        </div>
+      </section>
+      <section id="history-section" hidden><div class="page-heading"><div><div class="eyebrow">INQUIRY HISTORY</div><h1>每一次问询，都有记录<span class="heading-dot">.</span></h1><p>记录保存在本机，包含实际回答、证据、模型配置与耗时。</p></div><button id="export-history" class="secondary-button">导出最近记录 ↓</button></div><div id="history-list"></div></section>
+      <footer class="page-footer"><span>知码 · 基于代码知识图谱与大模型的业务逻辑问询</span><span>独立提问 · 本地记录 · 源码可追溯</span></footer>
+    </main>
+  </div><script src="/app.js" defer></script>
+</body>
+</html>

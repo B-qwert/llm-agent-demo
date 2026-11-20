@@ -1,0 +1,362 @@
+{
+  "scores": {
+    "method": {
+      "B": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        2
+      ],
+      "C": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        2
+      ]
+    },
+    "character": {
+      "B": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        2,
+        1,
+        2,
+        2
+      ],
+      "C": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        2,
+        1,
+        2,
+        2
+      ]
+    },
+    "ast": {
+      "B": [
+        0,
+        2,
+        0,
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        0,
+        0,
+        2,
+        0,
+        0
+      ],
+      "C": [
+        0,
+        2,
+        0,
+        2,
+        2,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        2,
+        0,
+        1
+      ]
+    },
+    "token": {
+      "B": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "C": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "paragraph": {
+      "B": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        2,
+        2,
+        0,
+        2
+      ],
+      "C": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        0,
+        2,
+        2,
+        0,
+        2
+      ]
+    }
+  },
+  "notes": [
+    {
+      "strategy": "method",
+      "mode": "B",
+      "question": "Q13",
+      "reason": "未召回 addBook 的新书初始化语句；只给出可能可借、次数为0的推测，明确无法确认实际初始值。"
+    },
+    {
+      "strategy": "method",
+      "mode": "C",
+      "question": "Q13",
+      "reason": "图扩展只补到调用入口，未补到 addBook 初始化语句；仍未答出新书实际默认值。"
+    },
+    {
+      "strategy": "character",
+      "mode": "B",
+      "question": "Q10",
+      "reason": "未召回还书主体，无法判断是否核验ID。"
+    },
+    {
+      "strategy": "character",
+      "mode": "C",
+      "question": "Q10",
+      "reason": "补到菜单入口仍缺还书主体，无法判断实际ID核验逻辑。"
+    },
+    {
+      "strategy": "character",
+      "mode": "B",
+      "question": "Q12",
+      "reason": "答出分流方向，但明确将 case 5→returnBook 视为菜单文字推断，未完整确认归还调用分支。"
+    },
+    {
+      "strategy": "character",
+      "mode": "C",
+      "question": "Q12",
+      "reason": "图补充未提供 case 5 调用，仍将归还分派标为推断；答案不完整。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "B",
+      "question": "Q01",
+      "reason": "未召回借书校验，明确无法列出条件；另把 bookCount 推测为库存/数量，语义不符。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "C",
+      "question": "Q01",
+      "reason": "仅补菜单/字段，未答出四项借书条件。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "B",
+      "question": "Q03",
+      "reason": "未答出借出成功的五个字段赋值。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "C",
+      "question": "Q03",
+      "reason": "未答出借出成功的五个字段赋值，初始化不能替代成功分支。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "B",
+      "question": "Q06",
+      "reason": "答出降序冒泡和同步交换，但缺收集非空书名及次数来源。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "C",
+      "question": "Q06",
+      "reason": "补了列表声明/入口，仍未说明非空图书收集过程。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "B",
+      "question": "Q07",
+      "reason": "只说明名称非空与重名；未答出容量校验和trim预处理。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "C",
+      "question": "Q07",
+      "reason": "仍遗漏容量校验和trim；两项局部校验不构成完整答案。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "B",
+      "question": "Q08",
+      "reason": "仅从片段未显示校验作有限推测，答出ID去重；未说明真实trim输入和非空检查缺失的完整路径，记部分正确。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "C",
+      "question": "Q08",
+      "reason": "明确无法确认是否非空校验，未给出实际否定结论。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "C",
+      "question": "Q09",
+      "reason": "租金公式和跨月缺陷答对，但额外把归还时 borrowName置无说成读者姓名置无，含非核心字段错误，记部分正确。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "B",
+      "question": "Q10",
+      "reason": "缺还书主体，明确无法判断ID核验。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "C",
+      "question": "Q10",
+      "reason": "菜单关系未补到还书主体，未答出ID不核验。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "B",
+      "question": "Q11",
+      "reason": "仅有初始化局部赋值和去重片段，明确无法确认重启后是否保留。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "C",
+      "question": "Q11",
+      "reason": "从main和初始化片段推断很可能丢失，但未完整解释数组重建/持久化边界；条件性回答，记部分正确，需团队复核。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "B",
+      "question": "Q13",
+      "reason": "缺addBook赋值，只讨论Java数组默认0及条件推测，未答出真实新书初始值。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "C",
+      "question": "Q13",
+      "reason": "缺addBook赋值，明确无法确认新书实际状态和次数。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "B",
+      "question": "Q14",
+      "reason": "虽答出同步左移，但错误断言最后会读索引50、有越界风险；实际i最大48，只读49，关键边界解释错误且漏清尾。"
+    },
+    {
+      "strategy": "ast",
+      "mode": "C",
+      "question": "Q14",
+      "reason": "同步左移正确，但缺少末尾四字段重置规则。"
+    },
+    {
+      "strategy": "token",
+      "mode": "C",
+      "question": "Q09",
+      "reason": "公式和跨月总体结论正确，但反例称6月20日到7月5日应16天；真实日期差15天，恰与该例代码结果一致，错误反例，记部分正确。"
+    },
+    {
+      "strategy": "paragraph",
+      "mode": "B",
+      "question": "Q10",
+      "reason": "缺还书主体，未答出ID不核验。"
+    },
+    {
+      "strategy": "paragraph",
+      "mode": "C",
+      "question": "Q10",
+      "reason": "图扩展补菜单未补还书主体，仍无法确认。"
+    },
+    {
+      "strategy": "paragraph",
+      "mode": "B",
+      "question": "Q13",
+      "reason": "无addBook初始化片段，只推测可借与0次，未确认真实实现。"
+    },
+    {
+      "strategy": "paragraph",
+      "mode": "C",
+      "question": "Q13",
+      "reason": "图扩展仅有入口，未确认真实默认值。"
+    },
+    {
+      "strategy": "paragraph",
+      "mode": "C",
+      "question": "Q09",
+      "reason": "公式、天数和跨月总体结论正确，但把1月20日到2月10日算20天的偏差解释为符号和方向都错，实际仅固定月长少算1天，含错误因果解释，记部分正确。"
+    }
+  ]
+}
