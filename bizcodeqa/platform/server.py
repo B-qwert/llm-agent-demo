@@ -9,7 +9,7 @@ from urllib.parse import urlsplit
 from ..config import load_env
 from .sample import ROOT
 from .chunking import chunk_config
-from .stores import state, index_profiles, ServiceError
+from .stores import state, index_profiles, ServiceError, embedding_model
 from .qa import answer
 
 WEB=ROOT/'web'
@@ -49,7 +49,7 @@ def history():
     if not HISTORY.exists():
         return []
     with HISTORY_LOCK:
-        lines=HISTORY.read_text(encoding='utf-8').splitlines()[-100:]
+        lines=HISTORY.read_text(encoding='utf-8').splitlines()
     return [json.loads(line) for line in lines]
 
 
@@ -89,7 +89,7 @@ class Handler(BaseHTTPRequestHandler):
                                   'chunk_count':len(index['chunks']) if index else 0,
                                   'entity_count':index['entity_count'] if index else 0,
                                   'relationship_count':index['relationship_count'] if index else 0,
-                                  'embedding_model':index['embedding_model'] if index else 'qwen3-embedding:0.6b',
+                                  'embedding_model':index['embedding_model'] if index else embedding_model(),
                                   'embedding_dimension':index['embedding_dimension'] if index else None,
                                   'index_profiles':index_profiles(),'preparation':preparation_status(),
                                   'status_scope':'索引登记状态；各服务可用性在实际请求时检查',

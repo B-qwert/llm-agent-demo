@@ -7,7 +7,7 @@ import uuid
 from ..config import load_env
 from .sample import ROOT, load_sample
 from .chunking import chunk_config, character_chunks, ast_chunks, token_chunks, paragraph_chunks
-from .stores import STATE, EMBEDDING_MODEL, QUERY_INSTRUCTION, embed, model_digest, milvus, graph, index_path
+from .stores import STATE, QUERY_INSTRUCTION, embed, embedding_model, model_digest, milvus, graph, index_path
 
 
 def prepare(strategy='method', chunk_size=800, chunk_overlap=100, progress=None):
@@ -21,6 +21,7 @@ def prepare(strategy='method', chunk_size=800, chunk_overlap=100, progress=None)
               token_chunks(fixture,chunk_size,chunk_overlap) if strategy=='token' else
               paragraph_chunks(fixture) if strategy=='paragraph' else character_chunks(fixture,chunk_size,chunk_overlap))
     notify(f'正在为 {len(chunks)} 个片段生成向量')
+    model = embedding_model()
     digest = model_digest()
     vectors = embed([c['canonical_name']+'\n'+c['code'] for c in chunks])
     dimension = len(vectors[0])
@@ -39,7 +40,7 @@ def prepare(strategy='method', chunk_size=800, chunk_overlap=100, progress=None)
         client.create_collection(collection_name=collection,schema=schema,index_params=indexes,
                                  consistency_level='Strong')
         created=True
-        rows = [{**{k:v for k,v in c.items() if k!='code'},'embedding_model':EMBEDDING_MODEL,
+        rows = [{**{k:v for k,v in c.items() if k!='code'},'embedding_model':model,
                  'embedding_digest':digest,'vector':vector} for c,vector in zip(chunks,vectors)]
         client.upsert(collection_name=collection,data=rows)
         client.flush(collection_name=collection)
@@ -72,7 +73,7 @@ def prepare(strategy='method', chunk_size=800, chunk_overlap=100, progress=None)
                                                s=fixture['metadata']['snapshot_id'],database_=database)
             if records[0]['count']!=len(fixture['entities']):
                 raise RuntimeError('Neo4j 实体数量校验失败')
-        index = {**fixture['metadata'],'collection':collection,'embedding_model':EMBEDDING_MODEL,
+        index = {**fixture['metadata'],'collection':collection,'embedding_model':model,
                  'embedding_digest':digest,'embedding_dimension':dimension,'metric':'COSINE',
                  'query_instruction':QUERY_INSTRUCTION,'chunks':chunks,'graph_ready':True,
                  'entity_count':len(fixture['entities']),'relationship_count':len(fixture['relationships']),

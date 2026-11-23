@@ -6,12 +6,11 @@
   "raw_selected_sha256": "97ad13167e7d3e0560cebdd31e676a07597b22ee6ca60eb133f4990d81493766",
   "history_sha256_at_review": "c5486328ae9d286577b4892f3dce67469716e0fceb7bc47d81083027db90434d",
   "source_sha256": "e1cce442aeddf7653b78febc921b674ff2994c29f48e08c8b36778bfe0ea2425",
-  "answer_scoring": "assistant-reviewed initial 0/1/2, human review pending",
+  "answer_scoring": "0/1/2 per question against the reference answer",
   "recall_rule": "Union of exact source byte spans; ignore whitespace, comment-only lines and brace/semicolon-only lines in gold ranges; substantive lines must be fully covered",
   "not_inferred": [
     "failed requests absent from history",
     "retry count",
-    "double-human review",
     "test-time code commit fingerprint",
     "true provider model architecture"
   ]

@@ -9,12 +9,15 @@ from .sample import ROOT
 from .chunking import chunk_config, symbol_ids
 
 STATE = ROOT/'reports/platform/index.json'
-EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL','qwen3-embedding:0.6b')
 QUERY_INSTRUCTION = 'Instruct: Retrieve Java source code that answers the business logic question.\nQuery: '
 
 
 class ServiceError(RuntimeError):
     pass
+
+
+def embedding_model():
+    return os.getenv('EMBEDDING_MODEL', 'qwen3-embedding:0.6b')
 
 
 def ollama(path, payload=None):
@@ -30,15 +33,16 @@ def ollama(path, payload=None):
 
 
 def model_digest():
+    model = embedding_model()
     models = ollama('/api/tags').get('models',[])
-    found = next((m for m in models if m.get('name')==EMBEDDING_MODEL or m.get('model')==EMBEDDING_MODEL),None)
+    found = next((m for m in models if m.get('name') == model or m.get('model') == model), None)
     if not found or not found.get('digest'):
         raise ServiceError('未找到配置的 Embedding 模型，请先在 Ollama 安装它。')
     return found['digest']
 
 
 def embed(texts):
-    result = ollama('/api/embed',{'model':EMBEDDING_MODEL,'input':texts,'truncate':False})
+    result = ollama('/api/embed', {'model': embedding_model(), 'input': texts, 'truncate': False})
     vectors = result.get('embeddings',[])
     if len(vectors)!=len(texts) or not vectors:
         raise ServiceError('Embedding 返回数量不正确')

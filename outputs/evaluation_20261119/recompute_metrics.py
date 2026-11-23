@@ -59,4 +59,4 @@ for item in summary:
  if item['mode']!='A':
   assert sum(len(r['eval_recall']['final_hits']) for r in group)/36==item['final_recall_micro']
   assert statistics.mean(len(r['eval_recall']['final_hits'])/r['eval_recall']['gold_count'] for r in group)==item['final_recall_macro']
-print('PASS: 210 immutable records, 36 gold units, 868 exact source objects, 15 group summaries; answer judgments remain reviewable initial scores.')
+print('PASS: 210 records, 36 evidence units, 868 source matches, and 15 group summaries.')
