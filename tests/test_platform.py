@@ -7,6 +7,7 @@ from unittest.mock import patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
+from bizcodeqa.config import load_env
 from bizcodeqa.platform import qa, sample, server, stores
 from bizcodeqa.platform.stores import ServiceError
 
@@ -91,6 +92,23 @@ class RoutingTests(unittest.TestCase):
 
 
 class VectorAdapterTests(unittest.TestCase):
+    def test_embedding_model_loaded_from_env_file_after_import(self):
+        with tempfile.TemporaryDirectory() as folder, patch.dict('os.environ', {}, clear=True):
+            env_file = Path(folder) / '.env'
+            env_file.write_text('EMBEDDING_MODEL=custom-embedding:1\n', encoding='utf-8')
+            load_env(env_file)
+
+            with patch.object(stores, 'ollama', side_effect=[
+                {'models': [{'name': 'custom-embedding:1', 'digest': 'custom-digest'}]},
+                {'embeddings': [[1.0, 0.0]]},
+            ]) as ollama:
+                self.assertEqual(stores.model_digest(), 'custom-digest')
+                self.assertEqual(stores.embed(['question']), [[1.0, 0.0]])
+
+            ollama.assert_called_with('/api/embed', {
+                'model': 'custom-embedding:1', 'input': ['question'], 'truncate': False,
+            })
+
     def test_custom_primary_key_and_snapshot_filter(self):
         fixture=sample.load_sample()
         chunk=fixture['chunks'][8]
