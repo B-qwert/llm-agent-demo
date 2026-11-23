@@ -14,3 +14,9 @@ volumes/
 *.exe
 *.msi
 .DS_Store
+
+# workbench（代码问询工作台）的运行时产物：证书、查询历史、备份与截图都不入库
+workbench/certs/
+workbench/_runtime/
+workbench/_backup/
+workbench/_shots/
