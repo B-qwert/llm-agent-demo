@@ -160,6 +160,19 @@ class ServerTests(unittest.TestCase):
             self.assertEqual(error.exception.code,404)
             error.exception.close()
 
+    def test_history_returns_all_saved_records(self):
+        records = [{'id': index} for index in range(230)]
+        with tempfile.TemporaryDirectory() as folder:
+            history_path = Path(folder) / 'history.jsonl'
+            history_path.write_text(
+                ''.join(json.dumps(record) + '\n' for record in records), encoding='utf-8',
+            )
+            with patch.object(server, 'HISTORY', history_path), patch.object(server, 'state', return_value=None):
+                with urlopen(self.base + '/api/history', timeout=3) as response:
+                    self.assertEqual(json.load(response)['records'], records)
+                with urlopen(self.base + '/api/status', timeout=3) as response:
+                    self.assertEqual(json.load(response)['history_count'], len(records))
+
     def test_foreign_origin_and_history_injection_rejected(self):
         request=Request(self.base+'/api/chat',data=b'{"mode":"A","question":"hi"}',
                         headers={'Content-Type':'application/json','Origin':'https://foreign.test'})

@@ -49,7 +49,7 @@ def history():
     if not HISTORY.exists():
         return []
     with HISTORY_LOCK:
-        lines=HISTORY.read_text(encoding='utf-8').splitlines()[-100:]
+        lines=HISTORY.read_text(encoding='utf-8').splitlines()
     return [json.loads(line) for line in lines]
 
 

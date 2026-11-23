@@ -162,11 +162,6 @@ function navigate(historyView) {
   $('nav-workbench').classList.toggle('active',!historyView);$('nav-history').classList.toggle('active',historyView);
   $('breadcrumb-current').textContent=historyView?'问答记录':'问询工作台';
 }
-function rememberRecord(record) {
-  records.push(record);
-  if (records.length > 100) records = records.slice(-100);
-}
-
 function renderHistory() {
   const list=$('history-list');list.replaceChildren();
   if(!records.length){list.append(element('div','还没有问答记录，回到工作台提出第一个问题。','history-empty'));return;}
@@ -193,13 +188,13 @@ async function run(compare=false) {
         $('loading-label').textContent=`正在运行方案 ${selected}：${modeNames[selected]}…`;
         const card=element('div',undefined,'comparison-card');card.append(element('strong',`方案 ${selected} · ${modeNames[selected]}`));$('comparison-results').append(card);
         try{
-          const record=await requestQuestion(selected,question,options);rememberRecord(record);card.append(element('p',record.answer));
+          const record=await requestQuestion(selected,question,options);records.push(record);card.append(element('p',record.answer));
           const button=element('button',`查看证据与详情 · ${record.timings.total_seconds}s`);button.addEventListener('click',()=>{setMode(selected);renderRecord(record);});card.append(button);renderRecord(record);
         }catch(error){card.append(element('p',error.message));}
       }
     }else{
       $('loading-label').textContent=`正在运行方案 ${mode}：${modeNames[mode]}…`;
-      const record=await requestQuestion(mode,question,options);rememberRecord(record);renderRecord(record);
+      const record=await requestQuestion(mode,question,options);records.push(record);renderRecord(record);
     }
     if(compare&&current)setMode(current.mode);
     $('history-count').textContent=records.length;renderHistory();
