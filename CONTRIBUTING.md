@@ -16,9 +16,11 @@
 git remote -v
 git config user.name "本人姓名"
 git config user.email "本人邮箱"
-git push -u origin main
-git switch -c feat/your-topic
+git fetch origin main
+git switch -c feat/your-topic origin/main
 ```
+
+提交后运行 `git push -u origin feat/your-topic`，再向 `main` 发起 Pull Request。
 
 首次 push 前检查暂存区没有 `.env`、密钥、数据库卷及未授权业务代码。远程开启 main 分支保护、至少一个审批、禁止 force push 和删除、要求 `offline` CI 成功。这些远程规则需在平台实际配置，本地文档不能强制执行。
 

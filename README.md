@@ -1,14 +1,12 @@
 # 基于代码知识图谱与大模型的业务逻辑智能问询系统
 
-本仓库用于课题的开发与三人协作。目前已完成开发环境搭建、文献调研与技术选型，并在本地实现面向固定图书借阅样例的 A/B/C 问询原型。现有代码提供数据库连通性检查、DeepSeek 客户端及网页问询；通用代码解析器、任意项目导入与正式准确性评测仍待完成。
+本仓库包含一个面向固定图书借阅 Java 样例的问询原型。网页支持直接问答、向量检索和图谱扩展三种模式，可查看回答引用的源码和行号。
 
 | 当前成果 | 仓库内容 |
 | --- | --- |
 | 开发环境 | Git 协作规范、Neo4j 与 Milvus 容器、DeepSeek API 接入及连通性检查；验收记录见[开发环境成果与验收报告](docs/开发环境成果与验收报告.md)。 |
 | 研究准备 | [文献调研与综述笔记](docs/文献调研与综述笔记.md)、[技术选型调研报告](docs/技术选型调研报告.md)。 |
-| 可行性论证 | [图书借阅原型测试记录](docs/图书借阅原型测试记录.md)、[样例复现说明](samples/book_borrow/README.md)、[210 条问答验证报告](docs/图书借阅210条问答验证结果.md)和[功能验证清单](docs/图书借阅人工评测参考答案与功能验证清单.md)。固定样例已完成入库、检索和问答联调，评分待团队复核。 |
-
-开发环境面向 Windows、Docker Desktop、WSL 2 和 Linux 容器。以下快速开始用于启动底座和验证连接。网页原型在项目根目录执行 `powershell -File scripts/platform.ps1 start` 后访问 http://127.0.0.1:8765；首次准备样例索引、各方案区别与日常操作见[问询平台使用说明](docs/问询平台使用说明.md)。
+| 可行性论证 | [图书借阅原型测试记录](docs/图书借阅原型测试记录.md)、[210 条问答验证报告](docs/图书借阅210条问答验证结果.md)和[功能验证清单](docs/图书借阅人工评测参考答案与功能验证清单.md)。 |
 
 ## 快速开始
 
@@ -23,13 +21,23 @@ powershell -File scripts/dev.ps1 up
 
 第一条命令只创建一次 `.env` 并随机生成数据库密码。第二条启动四个基础容器、等待健康检查、构建 Python 3.12 验收容器，运行数据库实际读写检索。首次需联网拉取镜像与 Python 依赖。再次运行不会重置数据库。
 
-本机 Python 仅需支持标准库；数据库驱动在容器内安装，避免本机 Python 3.14 与二进制依赖的兼容问题。若已有 Python 3.12，可创建 `.venv`、安装 `requirements.txt` 后直接运行 `python -m bizcodeqa.check`。
+脚本启动方式只用到宿主机 Python 的标准库，数据库驱动安装在容器中。需在本机直接运行检查或测试时，使用 Python 3.12，并先安装 `requirements.txt`。
+
+### 启动问询网页
+
+在本机 `.env` 填写 `LLM_API_KEY`，然后执行：
+
+```powershell
+powershell -File scripts/platform.ps1 start
+```
+
+打开 [http://127.0.0.1:8765](http://127.0.0.1:8765)。使用 B/C 前，启动 Ollama，并在网页为所选切分策略准备索引。具体操作见[问询平台使用说明](docs/问询平台使用说明.md)。
 
 ## LLM 接入
 
-已按用户选型配置 DeepSeek：`LLM_BASE_URL=https://api.deepseek.com`、`LLM_MODEL=deepseek-v4-flash`。编辑 `.env` 填写 `LLM_API_KEY`。基础地址不要带 `/chat/completions` 后缀。本实现支持 OpenAI 兼容的 Chat Completions 协议；原生 Claude Messages 协议需要另写适配器。
+配置示例使用 DeepSeek。默认地址为 `https://api.deepseek.com`，模型为 `deepseek-v4-flash`。基础地址填到服务端点即可，客户端会追加 `/chat/completions`。接口采用 OpenAI 兼容的 Chat Completions 协议。
 
-模型名已对照 [DeepSeek 官方文档](https://api-docs.deepseek.com/) 核实，但账号权限仍需真实调用验证。短连通性测试配置 `LLM_THINKING=disabled`，避免默认思考模式耗尽 128 token 的测试预算；其他兼容服务不支持此参数时将该项留空。业务推理阶段可按需求重新配置模式和预算。测试默认限制 128 输出 token，发送固定的短文本，不上传课题资料或业务源码。调用会消耗服务商额度。
+连通性测试发送固定短文本，默认关闭思考并将输出限制为 128 Token。服务不支持思考参数时，将 `LLM_THINKING` 留空。测试会消耗接口额度。
 
 ```powershell
 powershell -File scripts/dev.ps1 llm
@@ -54,6 +62,12 @@ docker compose ps
 docker compose logs --tail 100 neo4j milvus
 powershell -File scripts/dev.ps1 stop
 docker compose start
+```
+
+在本机运行单元测试：
+
+```powershell
+python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v
 ```
 
@@ -61,11 +75,10 @@ python -m unittest discover -s tests -v
 
 ## 工程结构与资料
 
-- `compose.yaml`：Neo4j、Milvus、etcd、MinIO 与验收容器。
+- `compose.yaml`：数据库、问询网页和验收容器。
 - `bizcodeqa/llm.py`：可被后续业务模块复用的 LLM 客户端。
 - `bizcodeqa/check.py`：真实连通性验收，带失败退出码与 JSON 报告。
 - `bizcodeqa/platform/` 与 `web/`：本地 A/B/C 问询后端、样例索引准备及网页；模式切换、源码证据、历史与 JSON 导出见[使用说明](docs/问询平台使用说明.md)。
-- 页面支持“按方法/字段”“按字符长度”“按 AST 语句”“按 Token 数”和“按空行/段落”五种切分；字符块长与重叠可配置，首次通过“准备该索引”在本地生成独立向量索引，保留原方法索引。默认 800/100 对当前样例生成 19 块。
 - `scripts/`：本地配置生成与 PowerShell 一键操作。
 - `samples/book_borrow/`：图书借阅 Java 样例、快照登记与编译启动证据；运行 `python scripts/prototype/check_sample.py` 复现基础检查（需 JDK 17 或以上）。
 - [协作规范](CONTRIBUTING.md)与[团队协作规范](docs/团队协作规范.md)：分支、提交、评审及全周期协作约定。
